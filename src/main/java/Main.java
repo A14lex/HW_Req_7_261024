@@ -1,27 +1,16 @@
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import static java.lang.System.out;
-import static java.lang.System.setOut;
-
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.logging.LogRecord;
+
+import static java.lang.System.out;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
         server.addHandler("GET", "/index.html", new Handler() {
-            //есть еще какой-то встроенный Handler что ли...
+            
 
 
             @Override
@@ -47,7 +36,6 @@ public class Main {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
 
 
             }

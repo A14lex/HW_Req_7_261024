@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +71,6 @@ public class Server {
             }
 
 
-
             final var path = parts[1];
             if (!validPaths.contains(path)) {
                 out.write((
@@ -93,13 +89,13 @@ public class Server {
 
             String pathMessages = request.requestMessage;
             BufferedOutputStream responseStream;
-            if(request.requestMessage.contains("?")){
+            if (request.requestMessage.contains("?")) {
                 pathMessages = getQueryPath(pathMessages);
             }
 
             final String keyHahdler = request.requestMethod + pathMessages;
             System.out.println("Приступаем к выбору Handler");
-            if(mapHandler.containsKey(keyHahdler)){
+            if (mapHandler.containsKey(keyHahdler)) {
                 System.out.println("Handler выбран");
                 responseStream = new BufferedOutputStream(socket.getOutputStream());
                 mapHandler.get(keyHahdler).handle(request, responseStream);
@@ -130,15 +126,16 @@ public class Server {
         }
         return null;
     }
-    public void addHandler(String method, String messages, Handler handler){
+
+    public void addHandler(String method, String messages, Handler handler) {
         System.out.println("Handler добавлен");
-        mapHandler.put((method+messages), handler);
+        mapHandler.put((method + messages), handler);
     }
 
-    public List<NameValuePair> getQueryParam(String name){
+    public List<NameValuePair> getQueryParam(String name) {
         //получаем список параметров из URL
         URI uri;
-        
+
         try {
             uri = new URI(name);
         } catch (URISyntaxException e) {
@@ -146,6 +143,7 @@ public class Server {
         }
         return URLEncodedUtils.parse(uri, Charset.defaultCharset());
     }
+
     //здесь получим путь. Его можно пописать в классе Request (он же под него и пишется), но можно и так, думаю
     public String getQueryPath(String name) {
 
@@ -153,7 +151,7 @@ public class Server {
     }
 
 
-    public static class Request{
+    public static class Request {
         public String requestMethod;
         public String requestMessage;
         public String requestBody;
