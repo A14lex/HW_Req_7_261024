@@ -58,6 +58,7 @@ public class Server {
                 final var out = new BufferedOutputStream(socket.getOutputStream());
         ) {
             final var requestLine = in.readLine();
+            System.out.println(requestLine);
 
             if (requestLine == null) {
                 out.flush();
@@ -71,27 +72,41 @@ public class Server {
             }
 
 
-            final var path = parts[1];
+            final String path;
+            if (parts[1].contains("?")) {
+                path = getQueryPath(parts[1]);//отделили путь от методов
+            } else {
+                path = parts[1];
+            }
+            System.out.println("Проверяем валидность пути");
+
+
             if (!validPaths.contains(path)) {
+                System.out.println("отправка сообщения об ошибке");
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
                                 "Content-Length: 0\r\n" +
                                 "Connection: close\r\n" +
                                 "\r\n"
                 ).getBytes());
+                System.out.println("Сообщение об ошибке отправлено, очищаем out");
                 out.flush();
+                System.out.println("out очищен, далее возвращаем текст");
                 return null;
             }
+            System.out.println("Запускаем Request");
 
             Request request = new Request();
             request.setRequestMethod(parts[0]);
-            request.setRequestMessage(parts[1]);
+            request.setRequestMessage(path);
+            System.out.println(path);
 
-            String pathMessages = request.requestMessage;
+
+            String pathMessages = request.requestMessage;//и вот получили для этой переменной путь без парамтров,
+
             BufferedOutputStream responseStream;
-            if (request.requestMessage.contains("?")) {
-                pathMessages = getQueryPath(pathMessages);
-            }
+//           Выводим данные параметров через этот метод
+            System.out.println(getQueryParam(parts[1]));
 
             final String keyHahdler = request.requestMethod + pathMessages;
             System.out.println("Приступаем к выбору Handler");
@@ -144,7 +159,7 @@ public class Server {
         return URLEncodedUtils.parse(uri, Charset.defaultCharset());
     }
 
-    //здесь получим путь. Его можно пописать в классе Request (он же под него и пишется), но можно и так, думаю
+
     public String getQueryPath(String name) {
 
         return name.substring(0, name.indexOf('?'));

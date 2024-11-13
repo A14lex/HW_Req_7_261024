@@ -10,7 +10,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Server server = new Server();
         server.addHandler("GET", "/index.html", new Handler() {
-            
 
 
             @Override
@@ -40,9 +39,10 @@ public class Main {
 
             }
         });
-        server.initialize(9998);
+        server.initialize(9999);
 
         server.start1();
 
     }
+
 }
